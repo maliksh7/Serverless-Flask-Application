@@ -1,0 +1,1413 @@
+{
+  "Outputs": {
+    "SaadrepoName": {
+      "Value": {
+        "Fn::ImportValue": "Sprint6SaadStack:ExportsOutputRefSaadecrrepo95BAD49E9739E750"
+      }
+    },
+    "SaadLoadBalancerDNS": {
+      "Value": {
+        "Fn::GetAtt": [
+          "LB8A12904C",
+          "DNSName"
+        ]
+      }
+    }
+  },
+  "Resources": {
+    "saadecsvpcFF1B5234": {
+      "Type": "AWS::EC2::VPC",
+      "Properties": {
+        "CidrBlock": "10.0.0.0/16",
+        "EnableDnsHostnames": true,
+        "EnableDnsSupport": true,
+        "InstanceTenancy": "default",
+        "Tags": [
+          {
+            "Key": "cohort",
+            "Value": "Voyager"
+          },
+          {
+            "Key": "name",
+            "Value": "Saad Hassan"
+          },
+          {
+            "Key": "Name",
+            "Value": "Sprint6SaadECSStack/saad_ecs_vpc"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/saad_ecs_vpc/Resource"
+      }
+    },
+    "saadecsvpcPublicSubnet1Subnet9E22FD16": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.0.0.0/18",
+        "VpcId": {
+          "Ref": "saadecsvpcFF1B5234"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            0,
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "MapPublicIpOnLaunch": true,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Public"
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Public"
+          },
+          {
+            "Key": "cohort",
+            "Value": "Voyager"
+          },
+          {
+            "Key": "name",
+            "Value": "Saad Hassan"
+          },
+          {
+            "Key": "Name",
+            "Value": "Sprint6SaadECSStack/saad_ecs_vpc/PublicSubnet1"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/saad_ecs_vpc/PublicSubnet1/Subnet"
+      }
+    },
+    "saadecsvpcPublicSubnet1RouteTable729444A2": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "saadecsvpcFF1B5234"
+        },
+        "Tags": [
+          {
+            "Key": "cohort",
+            "Value": "Voyager"
+          },
+          {
+            "Key": "name",
+            "Value": "Saad Hassan"
+          },
+          {
+            "Key": "Name",
+            "Value": "Sprint6SaadECSStack/saad_ecs_vpc/PublicSubnet1"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/saad_ecs_vpc/PublicSubnet1/RouteTable"
+      }
+    },
+    "saadecsvpcPublicSubnet1RouteTableAssociation2C644D05": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "saadecsvpcPublicSubnet1RouteTable729444A2"
+        },
+        "SubnetId": {
+          "Ref": "saadecsvpcPublicSubnet1Subnet9E22FD16"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/saad_ecs_vpc/PublicSubnet1/RouteTableAssociation"
+      }
+    },
+    "saadecsvpcPublicSubnet1DefaultRoute5E9DEC57": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "saadecsvpcPublicSubnet1RouteTable729444A2"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": {
+          "Ref": "saadecsvpcIGW390384E4"
+        }
+      },
+      "DependsOn": [
+        "saadecsvpcVPCGW490ACF26"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/saad_ecs_vpc/PublicSubnet1/DefaultRoute"
+      }
+    },
+    "saadecsvpcPublicSubnet1EIPA0554452": {
+      "Type": "AWS::EC2::EIP",
+      "Properties": {
+        "Domain": "vpc",
+        "Tags": [
+          {
+            "Key": "cohort",
+            "Value": "Voyager"
+          },
+          {
+            "Key": "name",
+            "Value": "Saad Hassan"
+          },
+          {
+            "Key": "Name",
+            "Value": "Sprint6SaadECSStack/saad_ecs_vpc/PublicSubnet1"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/saad_ecs_vpc/PublicSubnet1/EIP"
+      }
+    },
+    "saadecsvpcPublicSubnet1NATGateway3D12B8B5": {
+      "Type": "AWS::EC2::NatGateway",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "saadecsvpcPublicSubnet1Subnet9E22FD16"
+        },
+        "AllocationId": {
+          "Fn::GetAtt": [
+            "saadecsvpcPublicSubnet1EIPA0554452",
+            "AllocationId"
+          ]
+        },
+        "Tags": [
+          {
+            "Key": "cohort",
+            "Value": "Voyager"
+          },
+          {
+            "Key": "name",
+            "Value": "Saad Hassan"
+          },
+          {
+            "Key": "Name",
+            "Value": "Sprint6SaadECSStack/saad_ecs_vpc/PublicSubnet1"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/saad_ecs_vpc/PublicSubnet1/NATGateway"
+      }
+    },
+    "saadecsvpcPublicSubnet2Subnet93E93BD0": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.0.64.0/18",
+        "VpcId": {
+          "Ref": "saadecsvpcFF1B5234"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            1,
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "MapPublicIpOnLaunch": true,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Public"
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Public"
+          },
+          {
+            "Key": "cohort",
+            "Value": "Voyager"
+          },
+          {
+            "Key": "name",
+            "Value": "Saad Hassan"
+          },
+          {
+            "Key": "Name",
+            "Value": "Sprint6SaadECSStack/saad_ecs_vpc/PublicSubnet2"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/saad_ecs_vpc/PublicSubnet2/Subnet"
+      }
+    },
+    "saadecsvpcPublicSubnet2RouteTable756C389E": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "saadecsvpcFF1B5234"
+        },
+        "Tags": [
+          {
+            "Key": "cohort",
+            "Value": "Voyager"
+          },
+          {
+            "Key": "name",
+            "Value": "Saad Hassan"
+          },
+          {
+            "Key": "Name",
+            "Value": "Sprint6SaadECSStack/saad_ecs_vpc/PublicSubnet2"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/saad_ecs_vpc/PublicSubnet2/RouteTable"
+      }
+    },
+    "saadecsvpcPublicSubnet2RouteTableAssociation6EFC05C4": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "saadecsvpcPublicSubnet2RouteTable756C389E"
+        },
+        "SubnetId": {
+          "Ref": "saadecsvpcPublicSubnet2Subnet93E93BD0"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/saad_ecs_vpc/PublicSubnet2/RouteTableAssociation"
+      }
+    },
+    "saadecsvpcPublicSubnet2DefaultRoute6493ED01": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "saadecsvpcPublicSubnet2RouteTable756C389E"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": {
+          "Ref": "saadecsvpcIGW390384E4"
+        }
+      },
+      "DependsOn": [
+        "saadecsvpcVPCGW490ACF26"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/saad_ecs_vpc/PublicSubnet2/DefaultRoute"
+      }
+    },
+    "saadecsvpcPublicSubnet2EIP507395B6": {
+      "Type": "AWS::EC2::EIP",
+      "Properties": {
+        "Domain": "vpc",
+        "Tags": [
+          {
+            "Key": "cohort",
+            "Value": "Voyager"
+          },
+          {
+            "Key": "name",
+            "Value": "Saad Hassan"
+          },
+          {
+            "Key": "Name",
+            "Value": "Sprint6SaadECSStack/saad_ecs_vpc/PublicSubnet2"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/saad_ecs_vpc/PublicSubnet2/EIP"
+      }
+    },
+    "saadecsvpcPublicSubnet2NATGateway034579CA": {
+      "Type": "AWS::EC2::NatGateway",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "saadecsvpcPublicSubnet2Subnet93E93BD0"
+        },
+        "AllocationId": {
+          "Fn::GetAtt": [
+            "saadecsvpcPublicSubnet2EIP507395B6",
+            "AllocationId"
+          ]
+        },
+        "Tags": [
+          {
+            "Key": "cohort",
+            "Value": "Voyager"
+          },
+          {
+            "Key": "name",
+            "Value": "Saad Hassan"
+          },
+          {
+            "Key": "Name",
+            "Value": "Sprint6SaadECSStack/saad_ecs_vpc/PublicSubnet2"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/saad_ecs_vpc/PublicSubnet2/NATGateway"
+      }
+    },
+    "saadecsvpcPrivateSubnet1Subnet6C607577": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.0.128.0/18",
+        "VpcId": {
+          "Ref": "saadecsvpcFF1B5234"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            0,
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "MapPublicIpOnLaunch": false,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Private"
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Private"
+          },
+          {
+            "Key": "cohort",
+            "Value": "Voyager"
+          },
+          {
+            "Key": "name",
+            "Value": "Saad Hassan"
+          },
+          {
+            "Key": "Name",
+            "Value": "Sprint6SaadECSStack/saad_ecs_vpc/PrivateSubnet1"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/saad_ecs_vpc/PrivateSubnet1/Subnet"
+      }
+    },
+    "saadecsvpcPrivateSubnet1RouteTable4AF498D9": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "saadecsvpcFF1B5234"
+        },
+        "Tags": [
+          {
+            "Key": "cohort",
+            "Value": "Voyager"
+          },
+          {
+            "Key": "name",
+            "Value": "Saad Hassan"
+          },
+          {
+            "Key": "Name",
+            "Value": "Sprint6SaadECSStack/saad_ecs_vpc/PrivateSubnet1"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/saad_ecs_vpc/PrivateSubnet1/RouteTable"
+      }
+    },
+    "saadecsvpcPrivateSubnet1RouteTableAssociationB90A2CA9": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "saadecsvpcPrivateSubnet1RouteTable4AF498D9"
+        },
+        "SubnetId": {
+          "Ref": "saadecsvpcPrivateSubnet1Subnet6C607577"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/saad_ecs_vpc/PrivateSubnet1/RouteTableAssociation"
+      }
+    },
+    "saadecsvpcPrivateSubnet1DefaultRoute67CCEEF5": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "saadecsvpcPrivateSubnet1RouteTable4AF498D9"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "NatGatewayId": {
+          "Ref": "saadecsvpcPublicSubnet1NATGateway3D12B8B5"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/saad_ecs_vpc/PrivateSubnet1/DefaultRoute"
+      }
+    },
+    "saadecsvpcPrivateSubnet2SubnetEA9F2770": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.0.192.0/18",
+        "VpcId": {
+          "Ref": "saadecsvpcFF1B5234"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            1,
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "MapPublicIpOnLaunch": false,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Private"
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Private"
+          },
+          {
+            "Key": "cohort",
+            "Value": "Voyager"
+          },
+          {
+            "Key": "name",
+            "Value": "Saad Hassan"
+          },
+          {
+            "Key": "Name",
+            "Value": "Sprint6SaadECSStack/saad_ecs_vpc/PrivateSubnet2"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/saad_ecs_vpc/PrivateSubnet2/Subnet"
+      }
+    },
+    "saadecsvpcPrivateSubnet2RouteTable14A9C7DE": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "saadecsvpcFF1B5234"
+        },
+        "Tags": [
+          {
+            "Key": "cohort",
+            "Value": "Voyager"
+          },
+          {
+            "Key": "name",
+            "Value": "Saad Hassan"
+          },
+          {
+            "Key": "Name",
+            "Value": "Sprint6SaadECSStack/saad_ecs_vpc/PrivateSubnet2"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/saad_ecs_vpc/PrivateSubnet2/RouteTable"
+      }
+    },
+    "saadecsvpcPrivateSubnet2RouteTableAssociation79886D21": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "saadecsvpcPrivateSubnet2RouteTable14A9C7DE"
+        },
+        "SubnetId": {
+          "Ref": "saadecsvpcPrivateSubnet2SubnetEA9F2770"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/saad_ecs_vpc/PrivateSubnet2/RouteTableAssociation"
+      }
+    },
+    "saadecsvpcPrivateSubnet2DefaultRoute52B05EF2": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "saadecsvpcPrivateSubnet2RouteTable14A9C7DE"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "NatGatewayId": {
+          "Ref": "saadecsvpcPublicSubnet2NATGateway034579CA"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/saad_ecs_vpc/PrivateSubnet2/DefaultRoute"
+      }
+    },
+    "saadecsvpcIGW390384E4": {
+      "Type": "AWS::EC2::InternetGateway",
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "cohort",
+            "Value": "Voyager"
+          },
+          {
+            "Key": "name",
+            "Value": "Saad Hassan"
+          },
+          {
+            "Key": "Name",
+            "Value": "Sprint6SaadECSStack/saad_ecs_vpc"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/saad_ecs_vpc/IGW"
+      }
+    },
+    "saadecsvpcVPCGW490ACF26": {
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+      "Properties": {
+        "VpcId": {
+          "Ref": "saadecsvpcFF1B5234"
+        },
+        "InternetGatewayId": {
+          "Ref": "saadecsvpcIGW390384E4"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/saad_ecs_vpc/VPCGW"
+      }
+    },
+    "saadecscluster9629E190": {
+      "Type": "AWS::ECS::Cluster",
+      "Properties": {
+        "ClusterName": "Saad_FargetCluster",
+        "ClusterSettings": [
+          {
+            "Name": "containerInsights",
+            "Value": "enabled"
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "cohort",
+            "Value": "Voyager"
+          },
+          {
+            "Key": "name",
+            "Value": "Saad Hassan"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/saad-ecs_cluster/Resource"
+      }
+    },
+    "saadecsclusterD9C97C43": {
+      "Type": "AWS::ECS::ClusterCapacityProviderAssociations",
+      "Properties": {
+        "CapacityProviders": [
+          "FARGATE",
+          "FARGATE_SPOT"
+        ],
+        "Cluster": {
+          "Ref": "saadecscluster9629E190"
+        },
+        "DefaultCapacityProviderStrategy": []
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/saad-ecs_cluster/saad-ecs_cluster"
+      }
+    },
+    "saadecstaskrole84127D6C": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "ecs-tasks.amazonaws.cm"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "Description": "ECS task role for package forecast app",
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/AmazonS3FullAccess"
+              ]
+            ]
+          }
+        ],
+        "Policies": [
+          {
+            "PolicyDocument": {
+              "Statement": [
+                {
+                  "Action": "sts:AssumRole",
+                  "Effect": "Allow",
+                  "Resource": "*"
+                },
+                {
+                  "Action": "logs:*",
+                  "Effect": "Allow",
+                  "Resource": "*"
+                }
+              ],
+              "Version": "2012-10-17"
+            },
+            "PolicyName": "0"
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "cohort",
+            "Value": "Voyager"
+          },
+          {
+            "Key": "name",
+            "Value": "Saad Hassan"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/saad-ecs-task-role/Resource"
+      }
+    },
+    "saadecstaskloggroupF601EE4A": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "RetentionInDays": 5,
+        "Tags": [
+          {
+            "Key": "cohort",
+            "Value": "Voyager"
+          },
+          {
+            "Key": "name",
+            "Value": "Saad Hassan"
+          }
+        ]
+      },
+      "UpdateReplacePolicy": "Retain",
+      "DeletionPolicy": "Retain",
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/saad-ecs-task-log-group/Resource"
+      }
+    },
+    "SaadFargetTaskDef51F1C8EC": {
+      "Type": "AWS::ECS::TaskDefinition",
+      "Properties": {
+        "ContainerDefinitions": [
+          {
+            "Cpu": 256,
+            "Environment": [
+              {
+                "Name": "ENV1",
+                "Value": "environment variable"
+              }
+            ],
+            "Essential": true,
+            "Image": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Fn::Select": [
+                      4,
+                      {
+                        "Fn::Split": [
+                          ":",
+                          {
+                            "Fn::ImportValue": "Sprint6SaadStack:ExportsOutputFnGetAttSaadecrrepo95BAD49EArnD45D0073"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  ".dkr.ecr.",
+                  {
+                    "Fn::Select": [
+                      3,
+                      {
+                        "Fn::Split": [
+                          ":",
+                          {
+                            "Fn::ImportValue": "Sprint6SaadStack:ExportsOutputFnGetAttSaadecrrepo95BAD49EArnD45D0073"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  ".",
+                  {
+                    "Ref": "AWS::URLSuffix"
+                  },
+                  "/",
+                  {
+                    "Fn::ImportValue": "Sprint6SaadStack:ExportsOutputRefSaadecrrepo95BAD49E9739E750"
+                  },
+                  ":latest"
+                ]
+              ]
+            },
+            "LogConfiguration": {
+              "LogDriver": "awslogs",
+              "Options": {
+                "awslogs-group": {
+                  "Ref": "saadecstaskloggroupF601EE4A"
+                },
+                "awslogs-stream-prefix": "saad-ecs-task",
+                "awslogs-region": {
+                  "Ref": "AWS::Region"
+                }
+              }
+            },
+            "Memory": 512,
+            "Name": "SaadtaskContainer",
+            "PortMappings": [
+              {
+                "ContainerPort": 8801,
+                "Protocol": "tcp"
+              }
+            ]
+          }
+        ],
+        "Cpu": "256",
+        "EphemeralStorage": {
+          "SizeInGiB": 21
+        },
+        "ExecutionRoleArn": {
+          "Fn::GetAtt": [
+            "SaadFargetTaskDefExecutionRoleE93731EB",
+            "Arn"
+          ]
+        },
+        "Family": "saad_ecs_task_family",
+        "Memory": "512",
+        "NetworkMode": "awsvpc",
+        "RequiresCompatibilities": [
+          "FARGATE"
+        ],
+        "Tags": [
+          {
+            "Key": "cohort",
+            "Value": "Voyager"
+          },
+          {
+            "Key": "name",
+            "Value": "Saad Hassan"
+          }
+        ],
+        "TaskRoleArn": {
+          "Fn::GetAtt": [
+            "saadecstaskrole84127D6C",
+            "Arn"
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/Saad_FargetTaskDef/Resource"
+      }
+    },
+    "SaadFargetTaskDefExecutionRoleE93731EB": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "ecs-tasks.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "Tags": [
+          {
+            "Key": "cohort",
+            "Value": "Voyager"
+          },
+          {
+            "Key": "name",
+            "Value": "Saad Hassan"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/Saad_FargetTaskDef/ExecutionRole/Resource"
+      }
+    },
+    "SaadFargetTaskDefExecutionRoleDefaultPolicyD5FDC0A3": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage"
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::ImportValue": "Sprint6SaadStack:ExportsOutputFnGetAttSaadecrrepo95BAD49EArnD45D0073"
+              }
+            },
+            {
+              "Action": "ecr:GetAuthorizationToken",
+              "Effect": "Allow",
+              "Resource": "*"
+            },
+            {
+              "Action": [
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "saadecstaskloggroupF601EE4A",
+                  "Arn"
+                ]
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "SaadFargetTaskDefExecutionRoleDefaultPolicyD5FDC0A3",
+        "Roles": [
+          {
+            "Ref": "SaadFargetTaskDefExecutionRoleE93731EB"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/Saad_FargetTaskDef/ExecutionRole/DefaultPolicy/Resource"
+      }
+    },
+    "SaadEcsService5CAB9AA2": {
+      "Type": "AWS::ECS::Service",
+      "Properties": {
+        "Cluster": {
+          "Ref": "saadecscluster9629E190"
+        },
+        "DeploymentConfiguration": {
+          "MaximumPercent": 100,
+          "MinimumHealthyPercent": 10
+        },
+        "DesiredCount": 200,
+        "EnableECSManagedTags": false,
+        "HealthCheckGracePeriodSeconds": 60,
+        "LaunchType": "FARGATE",
+        "LoadBalancers": [
+          {
+            "ContainerName": "SaadtaskContainer",
+            "ContainerPort": 8801,
+            "TargetGroupArn": {
+              "Ref": "LBSaadListenerECSGroupC6B6324E"
+            }
+          }
+        ],
+        "NetworkConfiguration": {
+          "AwsvpcConfiguration": {
+            "AssignPublicIp": "DISABLED",
+            "SecurityGroups": [
+              {
+                "Fn::GetAtt": [
+                  "SaadEcsServiceSecurityGroup5B5AB07F",
+                  "GroupId"
+                ]
+              }
+            ],
+            "Subnets": [
+              {
+                "Ref": "saadecsvpcPrivateSubnet1Subnet6C607577"
+              },
+              {
+                "Ref": "saadecsvpcPrivateSubnet2SubnetEA9F2770"
+              }
+            ]
+          }
+        },
+        "ServiceName": "SaadEcsService",
+        "Tags": [
+          {
+            "Key": "cohort",
+            "Value": "Voyager"
+          },
+          {
+            "Key": "name",
+            "Value": "Saad Hassan"
+          }
+        ],
+        "TaskDefinition": {
+          "Ref": "SaadFargetTaskDef51F1C8EC"
+        }
+      },
+      "DependsOn": [
+        "LBSaadListenerECSGroupC6B6324E",
+        "LBSaadListenerEEB6DCA0"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/SaadEcsService/Service"
+      }
+    },
+    "SaadEcsServiceSecurityGroup5B5AB07F": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Sprint6SaadECSStack/SaadEcsService/SecurityGroup",
+        "SecurityGroupEgress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1"
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "cohort",
+            "Value": "Voyager"
+          },
+          {
+            "Key": "name",
+            "Value": "Saad Hassan"
+          }
+        ],
+        "VpcId": {
+          "Ref": "saadecsvpcFF1B5234"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/SaadEcsService/SecurityGroup/Resource"
+      }
+    },
+    "SaadEcsServiceSecurityGroupfromSprint6SaadECSStackLBSecurityGroupC5B1F211880178CCD655": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "IpProtocol": "tcp",
+        "Description": "Load balancer to target",
+        "FromPort": 8801,
+        "GroupId": {
+          "Fn::GetAtt": [
+            "SaadEcsServiceSecurityGroup5B5AB07F",
+            "GroupId"
+          ]
+        },
+        "SourceSecurityGroupId": {
+          "Fn::GetAtt": [
+            "LBSecurityGroup8A41EA2B",
+            "GroupId"
+          ]
+        },
+        "ToPort": 8801
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/SaadEcsService/SecurityGroup/from Sprint6SaadECSStackLBSecurityGroupC5B1F211:8801"
+      }
+    },
+    "LB8A12904C": {
+      "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+      "Properties": {
+        "LoadBalancerAttributes": [
+          {
+            "Key": "deletion_protection.enabled",
+            "Value": "false"
+          }
+        ],
+        "Scheme": "internet-facing",
+        "SecurityGroups": [
+          {
+            "Fn::GetAtt": [
+              "LBSecurityGroup8A41EA2B",
+              "GroupId"
+            ]
+          }
+        ],
+        "Subnets": [
+          {
+            "Ref": "saadecsvpcPublicSubnet1Subnet9E22FD16"
+          },
+          {
+            "Ref": "saadecsvpcPublicSubnet2Subnet93E93BD0"
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "cohort",
+            "Value": "Voyager"
+          },
+          {
+            "Key": "name",
+            "Value": "Saad Hassan"
+          }
+        ],
+        "Type": "application"
+      },
+      "DependsOn": [
+        "saadecsvpcPublicSubnet1DefaultRoute5E9DEC57",
+        "saadecsvpcPublicSubnet2DefaultRoute6493ED01"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/LB/Resource"
+      }
+    },
+    "LBSecurityGroup8A41EA2B": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Automatically created Security Group for ELB Sprint6SaadECSStackLB9B63AEB7",
+        "SecurityGroupIngress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow from anyone on port 80",
+            "FromPort": 80,
+            "IpProtocol": "tcp",
+            "ToPort": 80
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "cohort",
+            "Value": "Voyager"
+          },
+          {
+            "Key": "name",
+            "Value": "Saad Hassan"
+          }
+        ],
+        "VpcId": {
+          "Ref": "saadecsvpcFF1B5234"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/LB/SecurityGroup/Resource"
+      }
+    },
+    "LBSecurityGrouptoSprint6SaadECSStackSaadEcsServiceSecurityGroup061A50DE8801A254A2E6": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": {
+          "Fn::GetAtt": [
+            "LBSecurityGroup8A41EA2B",
+            "GroupId"
+          ]
+        },
+        "IpProtocol": "tcp",
+        "Description": "Load balancer to target",
+        "DestinationSecurityGroupId": {
+          "Fn::GetAtt": [
+            "SaadEcsServiceSecurityGroup5B5AB07F",
+            "GroupId"
+          ]
+        },
+        "FromPort": 8801,
+        "ToPort": 8801
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/LB/SecurityGroup/to Sprint6SaadECSStackSaadEcsServiceSecurityGroup061A50DE:8801"
+      }
+    },
+    "LBSaadListenerEEB6DCA0": {
+      "Type": "AWS::ElasticLoadBalancingV2::Listener",
+      "Properties": {
+        "DefaultActions": [
+          {
+            "TargetGroupArn": {
+              "Ref": "LBSaadListenerECSGroupC6B6324E"
+            },
+            "Type": "forward"
+          }
+        ],
+        "LoadBalancerArn": {
+          "Ref": "LB8A12904C"
+        },
+        "Port": 80,
+        "Protocol": "HTTP"
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/LB/SaadListener/Resource"
+      }
+    },
+    "LBSaadListenerECSGroupC6B6324E": {
+      "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+      "Properties": {
+        "Port": 80,
+        "Protocol": "HTTP",
+        "Tags": [
+          {
+            "Key": "cohort",
+            "Value": "Voyager"
+          },
+          {
+            "Key": "name",
+            "Value": "Saad Hassan"
+          }
+        ],
+        "TargetGroupAttributes": [
+          {
+            "Key": "stickiness.enabled",
+            "Value": "false"
+          }
+        ],
+        "TargetType": "ip",
+        "VpcId": {
+          "Ref": "saadecsvpcFF1B5234"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/LB/SaadListener/ECSGroup/Resource"
+      }
+    },
+    "CDKMetadata": {
+      "Type": "AWS::CDK::Metadata",
+      "Properties": {
+        "Analytics": "v2:deflate64:H4sIAAAAAAAA/31Ry27CMBD8lt6NC/TAmaYUIaE2ShDXauOYsMXYkR9BKMq/14kJSYvU045nd5OZ2TmdLej0CS5mwvLTRGBG69QCO5HoID+dLZ0lvvlVczan9b5kLb+PIxK7TCBLXSa5bbkBJcpZvoNM8IEfuKUxiiFYVPI+3ILVJm7LB9g1WH6BK4k1Vh4OH95Iy7XH/UBQcnstrVd9PHNpScqZ02iva61c2Wn4l9jIQnNjHvhVRzeEM0PrSDjj/94OPcIISmB+LdaqwpzrkUdD3kEX0Jo3pzd+QIm99b+MkhZQcj3ibrsp1xWyEGeADUE40zpRIeSuxsofpEsloIYIVXjpW1XcjffYuxJgLDKhIM9AgGQoi8qfeFmWfrnTvvW9164X3P56j+fQhyBvMz0e9Xfehb9ar2H0bBqScKOcDubG2MeRdyE0JL7ao5LPL3RBZ9Onb4M40U5aPHOahPoDXHHlDcYCAAA="
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint6SaadECSStack/CDKMetadata/Default"
+      },
+      "Condition": "CDKMetadataAvailable"
+    }
+  },
+  "Conditions": {
+    "CDKMetadataAvailable": {
+      "Fn::Or": [
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "af-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-northeast-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-northeast-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-southeast-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-southeast-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ca-central-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "cn-north-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "cn-northwest-1"
+              ]
+            }
+          ]
+        },
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-central-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-north-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-3"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "me-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "sa-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-east-2"
+              ]
+            }
+          ]
+        },
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-west-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-west-2"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "Parameters": {
+    "BootstrapVersion": {
+      "Type": "AWS::SSM::Parameter::Value<String>",
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+    }
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5"
+                  ],
+                  {
+                    "Ref": "BootstrapVersion"
+                  }
+                ]
+              }
+            ]
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+        }
+      ]
+    }
+  }
+}
