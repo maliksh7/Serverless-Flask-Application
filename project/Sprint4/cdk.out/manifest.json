@@ -1,0 +1,406 @@
+{
+  "version": "16.0.0",
+  "artifacts": {
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    },
+    "Sprint4SaadStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "Sprint4SaadStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "Sprint4SaadStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://unknown-account/unknown-region",
+      "properties": {
+        "templateFile": "Sprint4SaadStack.template.json",
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/22da6e9fc63508fdaa6aee9b4d2649c976df1d098b41db3dd59d0d7087b7c02f.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "Sprint4SaadStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "Sprint4SaadStack.assets"
+      ],
+      "metadata": {
+        "/Sprint4SaadStack/Saad_table/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadtableFED94E04"
+          }
+        ],
+        "/Sprint4SaadStack/Role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "Role1ABCC5F0"
+          }
+        ],
+        "/Sprint4SaadStack/Role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RoleDefaultPolicy5FFB7DAB"
+          }
+        ],
+        "/Sprint4SaadStack/DynamoLambda/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DynamoLambda6C02E165"
+          }
+        ],
+        "/Sprint4SaadStack/DynamoLambda/AllowInvoke:Sprint4SaadStackSaadHassanTopicF4391658": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DynamoLambdaAllowInvokeSprint4SaadStackSaadHassanTopicF43916582FEBFD1E"
+          }
+        ],
+        "/Sprint4SaadStack/DynamoLambda/SaadHassanTopic/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DynamoLambdaSaadHassanTopicE726442C"
+          }
+        ],
+        "/Sprint4SaadStack/WebHealthLambda/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "WebHealthLambdaB270CBD9"
+          }
+        ],
+        "/Sprint4SaadStack/webHealth_Invocation_Rule/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "webHealthInvocationRule65FE5025"
+          }
+        ],
+        "/Sprint4SaadStack/webHealth_Invocation_Rule/AllowEventRuleSprint4SaadStackWebHealthLambda651770CE": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "webHealthInvocationRuleAllowEventRuleSprint4SaadStackWebHealthLambda651770CE83AA3F84"
+          }
+        ],
+        "/Sprint4SaadStack/Saad Voyager Bucket/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadVoyagerBucket78F5CC5A"
+          }
+        ],
+        "/Sprint4SaadStack/Saad Voyager Bucket/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadVoyagerBucketPolicy40DD7734"
+          }
+        ],
+        "/Sprint4SaadStack/Saad Voyager Bucket/AutoDeleteObjectsCustomResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadVoyagerBucketAutoDeleteObjectsCustomResource248B94B9"
+          }
+        ],
+        "/Sprint4SaadStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
+          }
+        ],
+        "/Sprint4SaadStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F"
+          }
+        ],
+        "/Sprint4SaadStack/SkipQVoyager/AwsCliLayer/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SkipQVoyagerAwsCliLayerB34A21C3"
+          }
+        ],
+        "/Sprint4SaadStack/SkipQVoyager/CustomResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SkipQVoyagerCustomResourceA9B8BA82"
+          }
+        ],
+        "/Sprint4SaadStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265"
+          }
+        ],
+        "/Sprint4SaadStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF"
+          }
+        ],
+        "/Sprint4SaadStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C81C01536"
+          }
+        ],
+        "/Sprint4SaadStack/SaadHassanTopic/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadHassanTopicF32F269E"
+          }
+        ],
+        "/Sprint4SaadStack/SaadHassanTopic/saad.hassan.skipq@gmail.com/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadHassanTopicsaadhassanskipqgmailcom1392415E"
+          }
+        ],
+        "/Sprint4SaadStack/saad_latency_alarm_-www.skipq.org/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "saadlatencyalarmwwwskipqorgE4FDDD21"
+          }
+        ],
+        "/Sprint4SaadStack/saad_availability_alarm_-www.skipq.org/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "saadavailabilityalarmwwwskipqorgE752F9F6"
+          }
+        ],
+        "/Sprint4SaadStack/saad_latency_alarm_-www.google.com/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "saadlatencyalarmwwwgooglecom2FE81FAE"
+          }
+        ],
+        "/Sprint4SaadStack/saad_availability_alarm_-www.google.com/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "saadavailabilityalarmwwwgooglecomED6B2E13"
+          }
+        ],
+        "/Sprint4SaadStack/saad_latency_alarm_-www.facebook.com/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "saadlatencyalarmwwwfacebookcomD0F4099E"
+          }
+        ],
+        "/Sprint4SaadStack/saad_availability_alarm_-www.facebook.com/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "saadavailabilityalarmwwwfacebookcomED7D7C7F"
+          }
+        ],
+        "/Sprint4SaadStack/saad_latency_alarm_-www.youtube.com/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "saadlatencyalarmwwwyoutubecom16088277"
+          }
+        ],
+        "/Sprint4SaadStack/saad_availability_alarm_-www.youtube.com/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "saadavailabilityalarmwwwyoutubecom1436C8FB"
+          }
+        ],
+        "/Sprint4SaadStack/saad_latency_alarm_-www.instagram.com/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "saadlatencyalarmwwwinstagramcom08A638DF"
+          }
+        ],
+        "/Sprint4SaadStack/saad_availability_alarm_-www.instagram.com/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "saadavailabilityalarmwwwinstagramcom12F6EBBF"
+          }
+        ],
+        "/Sprint4SaadStack/saad_latency_alarm_-www.yahoo.com/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "saadlatencyalarmwwwyahoocom44AA9C0C"
+          }
+        ],
+        "/Sprint4SaadStack/saad_availability_alarm_-www.yahoo.com/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "saadavailabilityalarmwwwyahoocom8F7BC407"
+          }
+        ],
+        "/Sprint4SaadStack/Saad_webCrawler/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadwebCrawlerCCDDCD88"
+          }
+        ],
+        "/Sprint4SaadStack/Saad-Bucket-To-table/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadBucketTotable1C61DA2E"
+          }
+        ],
+        "/Sprint4SaadStack/SaadApiHandler/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadApiHandler736B0470"
+          }
+        ],
+        "/Sprint4SaadStack/Saad-ApiGateway/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadApiGateway1F141DEC"
+          }
+        ],
+        "/Sprint4SaadStack/Saad-ApiGateway/CloudWatchRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadApiGatewayCloudWatchRole5FD1851E"
+          }
+        ],
+        "/Sprint4SaadStack/Saad-ApiGateway/Account": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadApiGatewayAccount733A33ED"
+          }
+        ],
+        "/Sprint4SaadStack/Saad-ApiGateway/Deployment/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadApiGatewayDeploymentB5B74BA36d44fd244f3e74f210f6d692f09e4be7"
+          }
+        ],
+        "/Sprint4SaadStack/Saad-ApiGateway/DeploymentStage.prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadApiGatewayDeploymentStageprod943D6DB6"
+          }
+        ],
+        "/Sprint4SaadStack/Saad-ApiGateway/Endpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadApiGatewayEndpoint7CA1A2DB"
+          }
+        ],
+        "/Sprint4SaadStack/Saad-ApiGateway/Default/urls/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadApiGatewayurls9DE4BFD7"
+          }
+        ],
+        "/Sprint4SaadStack/Saad-ApiGateway/Default/urls/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadApiGatewayurlsOPTIONSE83D85F5"
+          }
+        ],
+        "/Sprint4SaadStack/Saad-ApiGateway/Default/urls/GET/ApiPermission.Sprint4SaadStackSaadApiGateway0A547857.GET..urls": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadApiGatewayurlsGETApiPermissionSprint4SaadStackSaadApiGateway0A547857GETurls58B96015"
+          }
+        ],
+        "/Sprint4SaadStack/Saad-ApiGateway/Default/urls/GET/ApiPermission.Test.Sprint4SaadStackSaadApiGateway0A547857.GET..urls": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadApiGatewayurlsGETApiPermissionTestSprint4SaadStackSaadApiGateway0A547857GETurls56885031"
+          }
+        ],
+        "/Sprint4SaadStack/Saad-ApiGateway/Default/urls/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadApiGatewayurlsGETB1CF6FEF"
+          }
+        ],
+        "/Sprint4SaadStack/Saad-ApiGateway/Default/urls/POST/ApiPermission.Sprint4SaadStackSaadApiGateway0A547857.POST..urls": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadApiGatewayurlsPOSTApiPermissionSprint4SaadStackSaadApiGateway0A547857POSTurls104AAE93"
+          }
+        ],
+        "/Sprint4SaadStack/Saad-ApiGateway/Default/urls/POST/ApiPermission.Test.Sprint4SaadStackSaadApiGateway0A547857.POST..urls": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadApiGatewayurlsPOSTApiPermissionTestSprint4SaadStackSaadApiGateway0A547857POSTurls7F965F4A"
+          }
+        ],
+        "/Sprint4SaadStack/Saad-ApiGateway/Default/urls/POST/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadApiGatewayurlsPOSTD8AE5C61"
+          }
+        ],
+        "/Sprint4SaadStack/Saad-ApiGateway/Default/urls/PATCH/ApiPermission.Sprint4SaadStackSaadApiGateway0A547857.PATCH..urls": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadApiGatewayurlsPATCHApiPermissionSprint4SaadStackSaadApiGateway0A547857PATCHurlsE53CFE6B"
+          }
+        ],
+        "/Sprint4SaadStack/Saad-ApiGateway/Default/urls/PATCH/ApiPermission.Test.Sprint4SaadStackSaadApiGateway0A547857.PATCH..urls": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadApiGatewayurlsPATCHApiPermissionTestSprint4SaadStackSaadApiGateway0A547857PATCHurlsDD45291B"
+          }
+        ],
+        "/Sprint4SaadStack/Saad-ApiGateway/Default/urls/PATCH/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadApiGatewayurlsPATCH80894151"
+          }
+        ],
+        "/Sprint4SaadStack/Saad-ApiGateway/Default/urls/DELETE/ApiPermission.Sprint4SaadStackSaadApiGateway0A547857.DELETE..urls": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadApiGatewayurlsDELETEApiPermissionSprint4SaadStackSaadApiGateway0A547857DELETEurls525649AC"
+          }
+        ],
+        "/Sprint4SaadStack/Saad-ApiGateway/Default/urls/DELETE/ApiPermission.Test.Sprint4SaadStackSaadApiGateway0A547857.DELETE..urls": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadApiGatewayurlsDELETEApiPermissionTestSprint4SaadStackSaadApiGateway0A547857DELETEurls23E87083"
+          }
+        ],
+        "/Sprint4SaadStack/Saad-ApiGateway/Default/urls/DELETE/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadApiGatewayurlsDELETE9B9B2B06"
+          }
+        ],
+        "/Sprint4SaadStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/Sprint4SaadStack/CDKMetadata/Condition": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadataAvailable"
+          }
+        ],
+        "/Sprint4SaadStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/Sprint4SaadStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "Sprint4SaadStack"
+    }
+  }
+}
