@@ -1,0 +1,2190 @@
+{
+  "Resources": {
+    "SaadtableV1CEE2FFF6": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "KeySchema": [
+          {
+            "AttributeName": "Timestamp",
+            "KeyType": "HASH"
+          },
+          {
+            "AttributeName": "Subject",
+            "KeyType": "RANGE"
+          }
+        ],
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "Timestamp",
+            "AttributeType": "S"
+          },
+          {
+            "AttributeName": "Subject",
+            "AttributeType": "S"
+          }
+        ],
+        "ProvisionedThroughput": {
+          "ReadCapacityUnits": 5,
+          "WriteCapacityUnits": 5
+        }
+      },
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Saad_tableV1/Resource"
+      }
+    },
+    "Role1ABCC5F0": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/CloudWatchFullAccess"
+              ]
+            ]
+          },
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/AmazonDynamoDBFullAccess"
+              ]
+            ]
+          },
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+              ]
+            ]
+          },
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/AWSLambdaInvocation-DynamoDB"
+              ]
+            ]
+          },
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/AmazonAPIGatewayInvokeFullAccess"
+              ]
+            ]
+          },
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/AmazonAPIGatewayAdministrator"
+              ]
+            ]
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Role/Resource"
+      }
+    },
+    "RoleDefaultPolicy5FFB7DAB": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "dynamodb:*",
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "SaadtableV1CEE2FFF6",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Ref": "AWS::NoValue"
+                }
+              ]
+            },
+            {
+              "Action": "dynamodb:*",
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "SaadwebCrawlerV118D0A073",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Ref": "AWS::NoValue"
+                }
+              ]
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "RoleDefaultPolicy5FFB7DAB",
+        "Roles": [
+          {
+            "Ref": "Role1ABCC5F0"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Role/DefaultPolicy/Resource"
+      }
+    },
+    "DynamoLambda6C02E165": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+          },
+          "S3Key": "df0a3f0e331621b74873c43db8c598a3c661dcfa7145fb9f44ac78aa9d911f0e.zip"
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "Role1ABCC5F0",
+            "Arn"
+          ]
+        },
+        "Environment": {
+          "Variables": {
+            "tableNameV1": {
+              "Ref": "SaadtableV1CEE2FFF6"
+            }
+          }
+        },
+        "Handler": "dynamoDB.lambda_handler",
+        "Runtime": "python3.8",
+        "Timeout": 60
+      },
+      "DependsOn": [
+        "RoleDefaultPolicy5FFB7DAB",
+        "Role1ABCC5F0"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/DynamoLambda/Resource",
+        "aws:asset:path": "asset.df0a3f0e331621b74873c43db8c598a3c661dcfa7145fb9f44ac78aa9d911f0e",
+        "aws:asset:is-bundled": false,
+        "aws:asset:property": "Code"
+      }
+    },
+    "DynamoLambdaAllowInvokeSprint5SaadStackSaadHassanTopicV1DDE4C4E10E06F29B": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "DynamoLambda6C02E165",
+            "Arn"
+          ]
+        },
+        "Principal": "sns.amazonaws.com",
+        "SourceArn": {
+          "Ref": "SaadHassanTopicV1BA39428F"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/DynamoLambda/AllowInvoke:Sprint5SaadStackSaadHassanTopicV1DDE4C4E1"
+      }
+    },
+    "DynamoLambdaSaadHassanTopicV1B906558F": {
+      "Type": "AWS::SNS::Subscription",
+      "Properties": {
+        "Protocol": "lambda",
+        "TopicArn": {
+          "Ref": "SaadHassanTopicV1BA39428F"
+        },
+        "Endpoint": {
+          "Fn::GetAtt": [
+            "DynamoLambda6C02E165",
+            "Arn"
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/DynamoLambda/SaadHassanTopicV1/Resource"
+      }
+    },
+    "WebHealthLambdaV135E89910": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+          },
+          "S3Key": "df0a3f0e331621b74873c43db8c598a3c661dcfa7145fb9f44ac78aa9d911f0e.zip"
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "Role1ABCC5F0",
+            "Arn"
+          ]
+        },
+        "Environment": {
+          "Variables": {
+            "bucketNameV1": {
+              "Ref": "SaadVoyagerBucketV1EDAC87A4"
+            },
+            "S3TotableV1": {
+              "Ref": "SaadwebCrawlerV118D0A073"
+            },
+            "topic_arnV1": {
+              "Ref": "SaadHassanTopicV1BA39428F"
+            }
+          }
+        },
+        "Handler": "WebHealthLambda.lambda_handler",
+        "Runtime": "python3.8",
+        "Timeout": 60
+      },
+      "DependsOn": [
+        "RoleDefaultPolicy5FFB7DAB",
+        "Role1ABCC5F0"
+      ],
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/WebHealthLambdaV1/Resource",
+        "aws:asset:path": "asset.df0a3f0e331621b74873c43db8c598a3c661dcfa7145fb9f44ac78aa9d911f0e",
+        "aws:asset:is-bundled": false,
+        "aws:asset:property": "Code"
+      }
+    },
+    "webHealthInvocationRule65FE5025": {
+      "Type": "AWS::Events::Rule",
+      "Properties": {
+        "Description": "Periodic Lambda",
+        "ScheduleExpression": "rate(1 minute)",
+        "State": "ENABLED",
+        "Targets": [
+          {
+            "Arn": {
+              "Fn::GetAtt": [
+                "WebHealthLambdaV135E89910",
+                "Arn"
+              ]
+            },
+            "Id": "Target0"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/webHealth_Invocation_Rule/Resource"
+      }
+    },
+    "webHealthInvocationRuleAllowEventRuleSprint5SaadStackWebHealthLambdaV1E148916A6D3F0348": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "WebHealthLambdaV135E89910",
+            "Arn"
+          ]
+        },
+        "Principal": "events.amazonaws.com",
+        "SourceArn": {
+          "Fn::GetAtt": [
+            "webHealthInvocationRule65FE5025",
+            "Arn"
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/webHealth_Invocation_Rule/AllowEventRuleSprint5SaadStackWebHealthLambdaV1E148916A"
+      }
+    },
+    "SaadVoyagerBucketV1EDAC87A4": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "aws-cdk:auto-delete-objects",
+            "Value": "true"
+          },
+          {
+            "Key": "aws-cdk:cr-owned:411cbb8b",
+            "Value": "true"
+          }
+        ]
+      },
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Saad Voyager BucketV1/Resource"
+      }
+    },
+    "SaadVoyagerBucketV1Policy4ACEE663": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "Bucket": {
+          "Ref": "SaadVoyagerBucketV1EDAC87A4"
+        },
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "s3:GetObject",
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": "*"
+              },
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    {
+                      "Fn::GetAtt": [
+                        "SaadVoyagerBucketV1EDAC87A4",
+                        "Arn"
+                      ]
+                    },
+                    "/*"
+                  ]
+                ]
+              }
+            },
+            {
+              "Action": [
+                "s3:GetBucket*",
+                "s3:List*",
+                "s3:DeleteObject*"
+              ],
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::GetAtt": [
+                    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+                    "Arn"
+                  ]
+                }
+              },
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "SaadVoyagerBucketV1EDAC87A4",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "SaadVoyagerBucketV1EDAC87A4",
+                          "Arn"
+                        ]
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              ]
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Saad Voyager BucketV1/Policy/Resource"
+      }
+    },
+    "SaadVoyagerBucketV1AutoDeleteObjectsCustomResource8787FEE0": {
+      "Type": "Custom::S3AutoDeleteObjects",
+      "Properties": {
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F",
+            "Arn"
+          ]
+        },
+        "BucketName": {
+          "Ref": "SaadVoyagerBucketV1EDAC87A4"
+        }
+      },
+      "DependsOn": [
+        "SaadVoyagerBucketV1Policy4ACEE663"
+      ],
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Saad Voyager BucketV1/AutoDeleteObjectsCustomResource/Default"
+      }
+    },
+    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              }
+            }
+          ]
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role"
+      }
+    },
+    "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+          },
+          "S3Key": "bdb08b9984816ecf43301a0c6d8913e270ee2448940b6b95e430dd222a4d90be.zip"
+        },
+        "Timeout": 900,
+        "MemorySize": 128,
+        "Handler": "__entrypoint__.handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs12.x",
+        "Description": {
+          "Fn::Join": [
+            "",
+            [
+              "Lambda function for auto-deleting objects in ",
+              {
+                "Ref": "SaadVoyagerBucketV1EDAC87A4"
+              },
+              " S3 bucket."
+            ]
+          ]
+        }
+      },
+      "DependsOn": [
+        "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler",
+        "aws:asset:path": "asset.bdb08b9984816ecf43301a0c6d8913e270ee2448940b6b95e430dd222a4d90be",
+        "aws:asset:property": "Code"
+      }
+    },
+    "SkipQVoyagerV1AwsCliLayerA24C4528": {
+      "Type": "AWS::Lambda::LayerVersion",
+      "Properties": {
+        "Content": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+          },
+          "S3Key": "391a62714930dde9689f73f04bec0cd78494b9d9b7167446e54c6c939bbbb6b4.zip"
+        },
+        "Description": "/opt/awscli/aws"
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/SkipQVoyagerV1/AwsCliLayer/Resource",
+        "aws:asset:path": "asset.391a62714930dde9689f73f04bec0cd78494b9d9b7167446e54c6c939bbbb6b4.zip",
+        "aws:asset:is-bundled": false,
+        "aws:asset:property": "Content"
+      }
+    },
+    "SkipQVoyagerV1CustomResource970945C8": {
+      "Type": "Custom::CDKBucketDeployment",
+      "Properties": {
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C81C01536",
+            "Arn"
+          ]
+        },
+        "SourceBucketNames": [
+          {
+            "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+          }
+        ],
+        "SourceObjectKeys": [
+          "ee12aec2504c2dc35927b6e09b0c0a05b592e8248c0c0a9688b5e6a7db07e2af.zip"
+        ],
+        "DestinationBucketName": {
+          "Ref": "SaadVoyagerBucketV1EDAC87A4"
+        },
+        "Prune": true
+      },
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/SkipQVoyagerV1/CustomResource/Default"
+      }
+    },
+    "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+              ]
+            ]
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/Resource"
+      }
+    },
+    "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "s3:GetObject*",
+                "s3:GetBucket*",
+                "s3:List*"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":s3:::",
+                      {
+                        "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":s3:::",
+                      {
+                        "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": [
+                "s3:GetObject*",
+                "s3:GetBucket*",
+                "s3:List*",
+                "s3:DeleteObject*",
+                "s3:PutObject",
+                "s3:PutObjectLegalHold",
+                "s3:PutObjectRetention",
+                "s3:PutObjectTagging",
+                "s3:PutObjectVersionTagging",
+                "s3:Abort*"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "SaadVoyagerBucketV1EDAC87A4",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "SaadVoyagerBucketV1EDAC87A4",
+                          "Arn"
+                        ]
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              ]
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF",
+        "Roles": [
+          {
+            "Ref": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/DefaultPolicy/Resource"
+      }
+    },
+    "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C81C01536": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+          },
+          "S3Key": "f98b78092dcdd31f5e6d47489beb5f804d4835ef86a8085d0a2053cb9ae711da.zip"
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265",
+            "Arn"
+          ]
+        },
+        "Handler": "index.handler",
+        "Layers": [
+          {
+            "Ref": "SkipQVoyagerV1AwsCliLayerA24C4528"
+          }
+        ],
+        "Runtime": "python3.7",
+        "Timeout": 900
+      },
+      "DependsOn": [
+        "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF",
+        "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/Resource",
+        "aws:asset:path": "asset.f98b78092dcdd31f5e6d47489beb5f804d4835ef86a8085d0a2053cb9ae711da",
+        "aws:asset:is-bundled": false,
+        "aws:asset:property": "Code"
+      }
+    },
+    "SaadHassanTopicV1BA39428F": {
+      "Type": "AWS::SNS::Topic",
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/SaadHassanTopicV1/Resource"
+      }
+    },
+    "SaadHassanTopicV1saadhassanskipqgmailcom3B3F30C3": {
+      "Type": "AWS::SNS::Subscription",
+      "Properties": {
+        "Protocol": "email",
+        "TopicArn": {
+          "Ref": "SaadHassanTopicV1BA39428F"
+        },
+        "Endpoint": "saad.hassan.skipq@gmail.com"
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/SaadHassanTopicV1/saad.hassan.skipq@gmail.com/Resource"
+      }
+    },
+    "SaadwebCrawlerV118D0A073": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "KeySchema": [
+          {
+            "AttributeName": "id_",
+            "KeyType": "HASH"
+          },
+          {
+            "AttributeName": "url",
+            "KeyType": "RANGE"
+          }
+        ],
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "id_",
+            "AttributeType": "S"
+          },
+          {
+            "AttributeName": "url",
+            "AttributeType": "S"
+          }
+        ],
+        "ProvisionedThroughput": {
+          "ReadCapacityUnits": 5,
+          "WriteCapacityUnits": 5
+        }
+      },
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Saad_webCrawlerV1/Resource"
+      }
+    },
+    "SaadBucketTotable1C61DA2E": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+          },
+          "S3Key": "df0a3f0e331621b74873c43db8c598a3c661dcfa7145fb9f44ac78aa9d911f0e.zip"
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "Role1ABCC5F0",
+            "Arn"
+          ]
+        },
+        "Environment": {
+          "Variables": {
+            "bucketNameV1": {
+              "Ref": "SaadVoyagerBucketV1EDAC87A4"
+            },
+            "S3TotableV1": {
+              "Ref": "SaadwebCrawlerV118D0A073"
+            }
+          }
+        },
+        "Handler": "s3_to_dynamoTable.bucket_to_dbHandler",
+        "Runtime": "python3.8",
+        "Timeout": 60
+      },
+      "DependsOn": [
+        "RoleDefaultPolicy5FFB7DAB",
+        "Role1ABCC5F0"
+      ],
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Saad-Bucket-To-table/Resource",
+        "aws:asset:path": "asset.df0a3f0e331621b74873c43db8c598a3c661dcfa7145fb9f44ac78aa9d911f0e",
+        "aws:asset:is-bundled": false,
+        "aws:asset:property": "Code"
+      }
+    },
+    "SaadApiHandlerV1A4CF5803": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+          },
+          "S3Key": "df0a3f0e331621b74873c43db8c598a3c661dcfa7145fb9f44ac78aa9d911f0e.zip"
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "Role1ABCC5F0",
+            "Arn"
+          ]
+        },
+        "Environment": {
+          "Variables": {
+            "bucketNameV1": {
+              "Ref": "SaadVoyagerBucketV1EDAC87A4"
+            },
+            "S3TotableV1": {
+              "Ref": "SaadwebCrawlerV118D0A073"
+            }
+          }
+        },
+        "Handler": "api_LambdaHandler.api_Handler",
+        "Runtime": "python3.8",
+        "Timeout": 60
+      },
+      "DependsOn": [
+        "RoleDefaultPolicy5FFB7DAB",
+        "Role1ABCC5F0"
+      ],
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/SaadApiHandlerV1/Resource",
+        "aws:asset:path": "asset.df0a3f0e331621b74873c43db8c598a3c661dcfa7145fb9f44ac78aa9d911f0e",
+        "aws:asset:is-bundled": false,
+        "aws:asset:property": "Code"
+      }
+    },
+    "SaadCRUDApiV1493C4E50": {
+      "Type": "AWS::ApiGateway::RestApi",
+      "Properties": {
+        "Name": "Saad-CRUD-Api-V1"
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Saad-CRUD-Api-V1/Resource"
+      }
+    },
+    "SaadCRUDApiV1CloudWatchRole1386FB69": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "apigateway.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
+              ]
+            ]
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Saad-CRUD-Api-V1/CloudWatchRole/Resource"
+      }
+    },
+    "SaadCRUDApiV1Account5F94BBF5": {
+      "Type": "AWS::ApiGateway::Account",
+      "Properties": {
+        "CloudWatchRoleArn": {
+          "Fn::GetAtt": [
+            "SaadCRUDApiV1CloudWatchRole1386FB69",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "SaadCRUDApiV1493C4E50"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Saad-CRUD-Api-V1/Account"
+      }
+    },
+    "SaadCRUDApiV1DeploymentF5F5B7A7acc9b66e2e09fd5cc7e9cf74f6bcde81": {
+      "Type": "AWS::ApiGateway::Deployment",
+      "Properties": {
+        "RestApiId": {
+          "Ref": "SaadCRUDApiV1493C4E50"
+        },
+        "Description": "Automatically created by the RestApi construct"
+      },
+      "DependsOn": [
+        "SaadCRUDApiV1proxyANY110D3E20",
+        "SaadCRUDApiV1proxyF5C5909A",
+        "SaadCRUDApiV1ANY4BB43752",
+        "SaadCRUDApiV1healthGET25C36F63",
+        "SaadCRUDApiV1health1581E808",
+        "SaadCRUDApiV1urlDELETEFFDAA3D1",
+        "SaadCRUDApiV1urlGET5EBE11C0",
+        "SaadCRUDApiV1urlPATCH293760E0",
+        "SaadCRUDApiV1urlPUT08359D7B",
+        "SaadCRUDApiV1urlD2BB1F33"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Saad-CRUD-Api-V1/Deployment/Resource"
+      }
+    },
+    "SaadCRUDApiV1DeploymentStageprod2CC1E04D": {
+      "Type": "AWS::ApiGateway::Stage",
+      "Properties": {
+        "RestApiId": {
+          "Ref": "SaadCRUDApiV1493C4E50"
+        },
+        "DeploymentId": {
+          "Ref": "SaadCRUDApiV1DeploymentF5F5B7A7acc9b66e2e09fd5cc7e9cf74f6bcde81"
+        },
+        "StageName": "prod"
+      },
+      "DependsOn": [
+        "SaadCRUDApiV1Account5F94BBF5"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Saad-CRUD-Api-V1/DeploymentStage.prod/Resource"
+      }
+    },
+    "SaadCRUDApiV1proxyF5C5909A": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "SaadCRUDApiV1493C4E50",
+            "RootResourceId"
+          ]
+        },
+        "PathPart": "{proxy+}",
+        "RestApiId": {
+          "Ref": "SaadCRUDApiV1493C4E50"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Saad-CRUD-Api-V1/Default/{proxy+}/Resource"
+      }
+    },
+    "SaadCRUDApiV1proxyANYApiPermissionSprint5SaadStackSaadCRUDApiV1EC4B83F2ANYproxy327BC56A": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "SaadApiHandlerV1A4CF5803",
+            "Arn"
+          ]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "SaadCRUDApiV1493C4E50"
+              },
+              "/",
+              {
+                "Ref": "SaadCRUDApiV1DeploymentStageprod2CC1E04D"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Saad-CRUD-Api-V1/Default/{proxy+}/ANY/ApiPermission.Sprint5SaadStackSaadCRUDApiV1EC4B83F2.ANY..{proxy+}"
+      }
+    },
+    "SaadCRUDApiV1proxyANYApiPermissionTestSprint5SaadStackSaadCRUDApiV1EC4B83F2ANYproxy0C821891": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "SaadApiHandlerV1A4CF5803",
+            "Arn"
+          ]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "SaadCRUDApiV1493C4E50"
+              },
+              "/test-invoke-stage/*/*"
+            ]
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Saad-CRUD-Api-V1/Default/{proxy+}/ANY/ApiPermission.Test.Sprint5SaadStackSaadCRUDApiV1EC4B83F2.ANY..{proxy+}"
+      }
+    },
+    "SaadCRUDApiV1proxyANY110D3E20": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "ANY",
+        "ResourceId": {
+          "Ref": "SaadCRUDApiV1proxyF5C5909A"
+        },
+        "RestApiId": {
+          "Ref": "SaadCRUDApiV1493C4E50"
+        },
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "SaadApiHandlerV1A4CF5803",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Saad-CRUD-Api-V1/Default/{proxy+}/ANY/Resource"
+      }
+    },
+    "SaadCRUDApiV1ANYApiPermissionSprint5SaadStackSaadCRUDApiV1EC4B83F2ANY7F7C629C": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "SaadApiHandlerV1A4CF5803",
+            "Arn"
+          ]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "SaadCRUDApiV1493C4E50"
+              },
+              "/",
+              {
+                "Ref": "SaadCRUDApiV1DeploymentStageprod2CC1E04D"
+              },
+              "/*/"
+            ]
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Saad-CRUD-Api-V1/Default/ANY/ApiPermission.Sprint5SaadStackSaadCRUDApiV1EC4B83F2.ANY.."
+      }
+    },
+    "SaadCRUDApiV1ANYApiPermissionTestSprint5SaadStackSaadCRUDApiV1EC4B83F2ANY6E458899": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "SaadApiHandlerV1A4CF5803",
+            "Arn"
+          ]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "SaadCRUDApiV1493C4E50"
+              },
+              "/test-invoke-stage/*/"
+            ]
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Saad-CRUD-Api-V1/Default/ANY/ApiPermission.Test.Sprint5SaadStackSaadCRUDApiV1EC4B83F2.ANY.."
+      }
+    },
+    "SaadCRUDApiV1ANY4BB43752": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "ANY",
+        "ResourceId": {
+          "Fn::GetAtt": [
+            "SaadCRUDApiV1493C4E50",
+            "RootResourceId"
+          ]
+        },
+        "RestApiId": {
+          "Ref": "SaadCRUDApiV1493C4E50"
+        },
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "SaadApiHandlerV1A4CF5803",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Saad-CRUD-Api-V1/Default/ANY/Resource"
+      }
+    },
+    "SaadCRUDApiV1health1581E808": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "SaadCRUDApiV1493C4E50",
+            "RootResourceId"
+          ]
+        },
+        "PathPart": "health",
+        "RestApiId": {
+          "Ref": "SaadCRUDApiV1493C4E50"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Saad-CRUD-Api-V1/Default/health/Resource"
+      }
+    },
+    "SaadCRUDApiV1healthGETApiPermissionSprint5SaadStackSaadCRUDApiV1EC4B83F2GEThealth38A11705": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "SaadApiHandlerV1A4CF5803",
+            "Arn"
+          ]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "SaadCRUDApiV1493C4E50"
+              },
+              "/",
+              {
+                "Ref": "SaadCRUDApiV1DeploymentStageprod2CC1E04D"
+              },
+              "/GET/health"
+            ]
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Saad-CRUD-Api-V1/Default/health/GET/ApiPermission.Sprint5SaadStackSaadCRUDApiV1EC4B83F2.GET..health"
+      }
+    },
+    "SaadCRUDApiV1healthGETApiPermissionTestSprint5SaadStackSaadCRUDApiV1EC4B83F2GEThealthB1D8DE2A": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "SaadApiHandlerV1A4CF5803",
+            "Arn"
+          ]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "SaadCRUDApiV1493C4E50"
+              },
+              "/test-invoke-stage/GET/health"
+            ]
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Saad-CRUD-Api-V1/Default/health/GET/ApiPermission.Test.Sprint5SaadStackSaadCRUDApiV1EC4B83F2.GET..health"
+      }
+    },
+    "SaadCRUDApiV1healthGET25C36F63": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "GET",
+        "ResourceId": {
+          "Ref": "SaadCRUDApiV1health1581E808"
+        },
+        "RestApiId": {
+          "Ref": "SaadCRUDApiV1493C4E50"
+        },
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "SaadApiHandlerV1A4CF5803",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Saad-CRUD-Api-V1/Default/health/GET/Resource"
+      }
+    },
+    "SaadCRUDApiV1urlD2BB1F33": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "SaadCRUDApiV1493C4E50",
+            "RootResourceId"
+          ]
+        },
+        "PathPart": "url",
+        "RestApiId": {
+          "Ref": "SaadCRUDApiV1493C4E50"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Saad-CRUD-Api-V1/Default/url/Resource"
+      }
+    },
+    "SaadCRUDApiV1urlGETApiPermissionSprint5SaadStackSaadCRUDApiV1EC4B83F2GETurl77C82786": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "SaadApiHandlerV1A4CF5803",
+            "Arn"
+          ]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "SaadCRUDApiV1493C4E50"
+              },
+              "/",
+              {
+                "Ref": "SaadCRUDApiV1DeploymentStageprod2CC1E04D"
+              },
+              "/GET/url"
+            ]
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Saad-CRUD-Api-V1/Default/url/GET/ApiPermission.Sprint5SaadStackSaadCRUDApiV1EC4B83F2.GET..url"
+      }
+    },
+    "SaadCRUDApiV1urlGETApiPermissionTestSprint5SaadStackSaadCRUDApiV1EC4B83F2GETurlD66C85D7": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "SaadApiHandlerV1A4CF5803",
+            "Arn"
+          ]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "SaadCRUDApiV1493C4E50"
+              },
+              "/test-invoke-stage/GET/url"
+            ]
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Saad-CRUD-Api-V1/Default/url/GET/ApiPermission.Test.Sprint5SaadStackSaadCRUDApiV1EC4B83F2.GET..url"
+      }
+    },
+    "SaadCRUDApiV1urlGET5EBE11C0": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "GET",
+        "ResourceId": {
+          "Ref": "SaadCRUDApiV1urlD2BB1F33"
+        },
+        "RestApiId": {
+          "Ref": "SaadCRUDApiV1493C4E50"
+        },
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "SaadApiHandlerV1A4CF5803",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Saad-CRUD-Api-V1/Default/url/GET/Resource"
+      }
+    },
+    "SaadCRUDApiV1urlPUTApiPermissionSprint5SaadStackSaadCRUDApiV1EC4B83F2PUTurl205DE14F": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "SaadApiHandlerV1A4CF5803",
+            "Arn"
+          ]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "SaadCRUDApiV1493C4E50"
+              },
+              "/",
+              {
+                "Ref": "SaadCRUDApiV1DeploymentStageprod2CC1E04D"
+              },
+              "/PUT/url"
+            ]
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Saad-CRUD-Api-V1/Default/url/PUT/ApiPermission.Sprint5SaadStackSaadCRUDApiV1EC4B83F2.PUT..url"
+      }
+    },
+    "SaadCRUDApiV1urlPUTApiPermissionTestSprint5SaadStackSaadCRUDApiV1EC4B83F2PUTurl64693179": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "SaadApiHandlerV1A4CF5803",
+            "Arn"
+          ]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "SaadCRUDApiV1493C4E50"
+              },
+              "/test-invoke-stage/PUT/url"
+            ]
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Saad-CRUD-Api-V1/Default/url/PUT/ApiPermission.Test.Sprint5SaadStackSaadCRUDApiV1EC4B83F2.PUT..url"
+      }
+    },
+    "SaadCRUDApiV1urlPUT08359D7B": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "PUT",
+        "ResourceId": {
+          "Ref": "SaadCRUDApiV1urlD2BB1F33"
+        },
+        "RestApiId": {
+          "Ref": "SaadCRUDApiV1493C4E50"
+        },
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "SaadApiHandlerV1A4CF5803",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Saad-CRUD-Api-V1/Default/url/PUT/Resource"
+      }
+    },
+    "SaadCRUDApiV1urlPATCHApiPermissionSprint5SaadStackSaadCRUDApiV1EC4B83F2PATCHurlC43C37E1": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "SaadApiHandlerV1A4CF5803",
+            "Arn"
+          ]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "SaadCRUDApiV1493C4E50"
+              },
+              "/",
+              {
+                "Ref": "SaadCRUDApiV1DeploymentStageprod2CC1E04D"
+              },
+              "/PATCH/url"
+            ]
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Saad-CRUD-Api-V1/Default/url/PATCH/ApiPermission.Sprint5SaadStackSaadCRUDApiV1EC4B83F2.PATCH..url"
+      }
+    },
+    "SaadCRUDApiV1urlPATCHApiPermissionTestSprint5SaadStackSaadCRUDApiV1EC4B83F2PATCHurlEE6C6265": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "SaadApiHandlerV1A4CF5803",
+            "Arn"
+          ]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "SaadCRUDApiV1493C4E50"
+              },
+              "/test-invoke-stage/PATCH/url"
+            ]
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Saad-CRUD-Api-V1/Default/url/PATCH/ApiPermission.Test.Sprint5SaadStackSaadCRUDApiV1EC4B83F2.PATCH..url"
+      }
+    },
+    "SaadCRUDApiV1urlPATCH293760E0": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "PATCH",
+        "ResourceId": {
+          "Ref": "SaadCRUDApiV1urlD2BB1F33"
+        },
+        "RestApiId": {
+          "Ref": "SaadCRUDApiV1493C4E50"
+        },
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "SaadApiHandlerV1A4CF5803",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Saad-CRUD-Api-V1/Default/url/PATCH/Resource"
+      }
+    },
+    "SaadCRUDApiV1urlDELETEApiPermissionSprint5SaadStackSaadCRUDApiV1EC4B83F2DELETEurl8CD1AC5F": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "SaadApiHandlerV1A4CF5803",
+            "Arn"
+          ]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "SaadCRUDApiV1493C4E50"
+              },
+              "/",
+              {
+                "Ref": "SaadCRUDApiV1DeploymentStageprod2CC1E04D"
+              },
+              "/DELETE/url"
+            ]
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Saad-CRUD-Api-V1/Default/url/DELETE/ApiPermission.Sprint5SaadStackSaadCRUDApiV1EC4B83F2.DELETE..url"
+      }
+    },
+    "SaadCRUDApiV1urlDELETEApiPermissionTestSprint5SaadStackSaadCRUDApiV1EC4B83F2DELETEurlF32FFFD4": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "SaadApiHandlerV1A4CF5803",
+            "Arn"
+          ]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "SaadCRUDApiV1493C4E50"
+              },
+              "/test-invoke-stage/DELETE/url"
+            ]
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Saad-CRUD-Api-V1/Default/url/DELETE/ApiPermission.Test.Sprint5SaadStackSaadCRUDApiV1EC4B83F2.DELETE..url"
+      }
+    },
+    "SaadCRUDApiV1urlDELETEFFDAA3D1": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "DELETE",
+        "ResourceId": {
+          "Ref": "SaadCRUDApiV1urlD2BB1F33"
+        },
+        "RestApiId": {
+          "Ref": "SaadCRUDApiV1493C4E50"
+        },
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "SaadApiHandlerV1A4CF5803",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/Saad-CRUD-Api-V1/Default/url/DELETE/Resource"
+      }
+    },
+    "CDKMetadata": {
+      "Type": "AWS::CDK::Metadata",
+      "Properties": {
+        "Analytics": "v2:deflate64:H4sIAAAAAAAA/21SyU7DMBD9Fu6uaakQ5zSIUxFRWnGNXHsoQx078tISRfl3vKSbxGnevBnP8sZPdPFM5w/sZGdcHGYSd3TYOMYPJFDNIHrFWi0CuWU7CaT8UgmMBFlLh1pnLtlKS+R9dDMaiWTtTjA6vHnFHWoVY7e4AtOitZO3Zj2YTzDJ36DaS3D6kj8Su2wGZi04S4toiIBO6r4F5ejK8wO41wsRs+mQ2RWzQDKMbSaUzXXmWz+8Vjbo4HeWG+zO4975W90hT3pEMBI4hrbhUe0nSXxUiXW4Zw5OrKfDOqlRg3VFhynlCgvOtVeOXDeI7I0XbrJPdTMIT7U3HNJuldG//ZmZCmf8Du5bi0hN6BwZxwskScxYNkhOSm+dbv8tdh8KTY8owExHbmS8XhM+DZdIi5MtJaaDxhIf3nU+bVRqJTCfs+rDROpxSV/oYv7wYxFnJkiALdA62z+3X4FqnAIAAA=="
+      },
+      "Metadata": {
+        "aws:cdk:path": "Sprint5SaadStack/CDKMetadata/Default"
+      },
+      "Condition": "CDKMetadataAvailable"
+    }
+  },
+  "Outputs": {
+    "SaadCRUDApiV1Endpoint17DE65CA": {
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Ref": "SaadCRUDApiV1493C4E50"
+            },
+            ".execute-api.",
+            {
+              "Ref": "AWS::Region"
+            },
+            ".",
+            {
+              "Ref": "AWS::URLSuffix"
+            },
+            "/",
+            {
+              "Ref": "SaadCRUDApiV1DeploymentStageprod2CC1E04D"
+            },
+            "/"
+          ]
+        ]
+      }
+    }
+  },
+  "Conditions": {
+    "CDKMetadataAvailable": {
+      "Fn::Or": [
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "af-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-northeast-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-northeast-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-southeast-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-southeast-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ca-central-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "cn-north-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "cn-northwest-1"
+              ]
+            }
+          ]
+        },
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-central-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-north-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-3"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "me-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "sa-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-east-2"
+              ]
+            }
+          ]
+        },
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-west-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-west-2"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "Parameters": {
+    "BootstrapVersion": {
+      "Type": "AWS::SSM::Parameter::Value<String>",
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+    }
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5"
+                  ],
+                  {
+                    "Ref": "BootstrapVersion"
+                  }
+                ]
+              }
+            ]
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,42 @@
+- config:
+    - testset: "Basic tests"
+    - timeout: 200
+    
+
+
+""" Test API Resources Health """
+
+# test api url health
+- test:
+    - name: "Check url Health"
+    - url: "/prod/health"
+    - method: 'GET'
+    
+
+
+""" Test API Methods """
+
+# Test PUT methods on urls
+
+- test:
+    - name: "Put url"
+    - url: "/prod/url"
+    - body: '{"url": "www.skipq.com"}'
+    - method: 'PUT'
+    
+- test:
+    - name: "Get url"
+    - url: "/prod/url"
+    - method: 'GET'
+    
+- test:
+    - name: "Post url"
+    - url: "/prod/url"
+    - body: '{"url": "www.skipq.com,www.timetime.com"}'
+    - method: 'POST'
+    
+- test:
+    - name: "Delete url"
+    - url: "/prod/url"
+    - body: '{"url": "www.skipq.com"}'
+    - method: 'DELETE'

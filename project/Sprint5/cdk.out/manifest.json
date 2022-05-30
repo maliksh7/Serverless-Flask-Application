@@ -1,0 +1,394 @@
+{
+  "version": "16.0.0",
+  "artifacts": {
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    },
+    "Sprint5SaadStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "Sprint5SaadStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "Sprint5SaadStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://unknown-account/unknown-region",
+      "properties": {
+        "templateFile": "Sprint5SaadStack.template.json",
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/9474df291d1eebd7b1f85a6fde78b01533ffc16e1db6c6a405fcf0022aa52c68.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "Sprint5SaadStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "Sprint5SaadStack.assets"
+      ],
+      "metadata": {
+        "/Sprint5SaadStack/Saad_tableV1/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadtableV1CEE2FFF6"
+          }
+        ],
+        "/Sprint5SaadStack/Role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "Role1ABCC5F0"
+          }
+        ],
+        "/Sprint5SaadStack/Role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RoleDefaultPolicy5FFB7DAB"
+          }
+        ],
+        "/Sprint5SaadStack/DynamoLambda/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DynamoLambda6C02E165"
+          }
+        ],
+        "/Sprint5SaadStack/DynamoLambda/AllowInvoke:Sprint5SaadStackSaadHassanTopicV1DDE4C4E1": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DynamoLambdaAllowInvokeSprint5SaadStackSaadHassanTopicV1DDE4C4E10E06F29B"
+          }
+        ],
+        "/Sprint5SaadStack/DynamoLambda/SaadHassanTopicV1/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DynamoLambdaSaadHassanTopicV1B906558F"
+          }
+        ],
+        "/Sprint5SaadStack/WebHealthLambdaV1/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "WebHealthLambdaV135E89910"
+          }
+        ],
+        "/Sprint5SaadStack/webHealth_Invocation_Rule/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "webHealthInvocationRule65FE5025"
+          }
+        ],
+        "/Sprint5SaadStack/webHealth_Invocation_Rule/AllowEventRuleSprint5SaadStackWebHealthLambdaV1E148916A": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "webHealthInvocationRuleAllowEventRuleSprint5SaadStackWebHealthLambdaV1E148916A6D3F0348"
+          }
+        ],
+        "/Sprint5SaadStack/Saad Voyager BucketV1/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadVoyagerBucketV1EDAC87A4"
+          }
+        ],
+        "/Sprint5SaadStack/Saad Voyager BucketV1/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadVoyagerBucketV1Policy4ACEE663"
+          }
+        ],
+        "/Sprint5SaadStack/Saad Voyager BucketV1/AutoDeleteObjectsCustomResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadVoyagerBucketV1AutoDeleteObjectsCustomResource8787FEE0"
+          }
+        ],
+        "/Sprint5SaadStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
+          }
+        ],
+        "/Sprint5SaadStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F"
+          }
+        ],
+        "/Sprint5SaadStack/SkipQVoyagerV1/AwsCliLayer/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SkipQVoyagerV1AwsCliLayerA24C4528"
+          }
+        ],
+        "/Sprint5SaadStack/SkipQVoyagerV1/CustomResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SkipQVoyagerV1CustomResource970945C8"
+          }
+        ],
+        "/Sprint5SaadStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265"
+          }
+        ],
+        "/Sprint5SaadStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF"
+          }
+        ],
+        "/Sprint5SaadStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C81C01536"
+          }
+        ],
+        "/Sprint5SaadStack/SaadHassanTopicV1/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadHassanTopicV1BA39428F"
+          }
+        ],
+        "/Sprint5SaadStack/SaadHassanTopicV1/saad.hassan.skipq@gmail.com/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadHassanTopicV1saadhassanskipqgmailcom3B3F30C3"
+          }
+        ],
+        "/Sprint5SaadStack/Saad_webCrawlerV1/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadwebCrawlerV118D0A073"
+          }
+        ],
+        "/Sprint5SaadStack/Saad-Bucket-To-table/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadBucketTotable1C61DA2E"
+          }
+        ],
+        "/Sprint5SaadStack/SaadApiHandlerV1/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadApiHandlerV1A4CF5803"
+          }
+        ],
+        "/Sprint5SaadStack/Saad-CRUD-Api-V1/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadCRUDApiV1493C4E50"
+          }
+        ],
+        "/Sprint5SaadStack/Saad-CRUD-Api-V1/CloudWatchRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadCRUDApiV1CloudWatchRole1386FB69"
+          }
+        ],
+        "/Sprint5SaadStack/Saad-CRUD-Api-V1/Account": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadCRUDApiV1Account5F94BBF5"
+          }
+        ],
+        "/Sprint5SaadStack/Saad-CRUD-Api-V1/Deployment/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadCRUDApiV1DeploymentF5F5B7A7acc9b66e2e09fd5cc7e9cf74f6bcde81"
+          }
+        ],
+        "/Sprint5SaadStack/Saad-CRUD-Api-V1/DeploymentStage.prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadCRUDApiV1DeploymentStageprod2CC1E04D"
+          }
+        ],
+        "/Sprint5SaadStack/Saad-CRUD-Api-V1/Endpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadCRUDApiV1Endpoint17DE65CA"
+          }
+        ],
+        "/Sprint5SaadStack/Saad-CRUD-Api-V1/Default/{proxy+}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadCRUDApiV1proxyF5C5909A"
+          }
+        ],
+        "/Sprint5SaadStack/Saad-CRUD-Api-V1/Default/{proxy+}/ANY/ApiPermission.Sprint5SaadStackSaadCRUDApiV1EC4B83F2.ANY..{proxy+}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadCRUDApiV1proxyANYApiPermissionSprint5SaadStackSaadCRUDApiV1EC4B83F2ANYproxy327BC56A"
+          }
+        ],
+        "/Sprint5SaadStack/Saad-CRUD-Api-V1/Default/{proxy+}/ANY/ApiPermission.Test.Sprint5SaadStackSaadCRUDApiV1EC4B83F2.ANY..{proxy+}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadCRUDApiV1proxyANYApiPermissionTestSprint5SaadStackSaadCRUDApiV1EC4B83F2ANYproxy0C821891"
+          }
+        ],
+        "/Sprint5SaadStack/Saad-CRUD-Api-V1/Default/{proxy+}/ANY/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadCRUDApiV1proxyANY110D3E20"
+          }
+        ],
+        "/Sprint5SaadStack/Saad-CRUD-Api-V1/Default/ANY/ApiPermission.Sprint5SaadStackSaadCRUDApiV1EC4B83F2.ANY..": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadCRUDApiV1ANYApiPermissionSprint5SaadStackSaadCRUDApiV1EC4B83F2ANY7F7C629C"
+          }
+        ],
+        "/Sprint5SaadStack/Saad-CRUD-Api-V1/Default/ANY/ApiPermission.Test.Sprint5SaadStackSaadCRUDApiV1EC4B83F2.ANY..": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadCRUDApiV1ANYApiPermissionTestSprint5SaadStackSaadCRUDApiV1EC4B83F2ANY6E458899"
+          }
+        ],
+        "/Sprint5SaadStack/Saad-CRUD-Api-V1/Default/ANY/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadCRUDApiV1ANY4BB43752"
+          }
+        ],
+        "/Sprint5SaadStack/Saad-CRUD-Api-V1/Default/health/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadCRUDApiV1health1581E808"
+          }
+        ],
+        "/Sprint5SaadStack/Saad-CRUD-Api-V1/Default/health/GET/ApiPermission.Sprint5SaadStackSaadCRUDApiV1EC4B83F2.GET..health": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadCRUDApiV1healthGETApiPermissionSprint5SaadStackSaadCRUDApiV1EC4B83F2GEThealth38A11705"
+          }
+        ],
+        "/Sprint5SaadStack/Saad-CRUD-Api-V1/Default/health/GET/ApiPermission.Test.Sprint5SaadStackSaadCRUDApiV1EC4B83F2.GET..health": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadCRUDApiV1healthGETApiPermissionTestSprint5SaadStackSaadCRUDApiV1EC4B83F2GEThealthB1D8DE2A"
+          }
+        ],
+        "/Sprint5SaadStack/Saad-CRUD-Api-V1/Default/health/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadCRUDApiV1healthGET25C36F63"
+          }
+        ],
+        "/Sprint5SaadStack/Saad-CRUD-Api-V1/Default/url/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadCRUDApiV1urlD2BB1F33"
+          }
+        ],
+        "/Sprint5SaadStack/Saad-CRUD-Api-V1/Default/url/GET/ApiPermission.Sprint5SaadStackSaadCRUDApiV1EC4B83F2.GET..url": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadCRUDApiV1urlGETApiPermissionSprint5SaadStackSaadCRUDApiV1EC4B83F2GETurl77C82786"
+          }
+        ],
+        "/Sprint5SaadStack/Saad-CRUD-Api-V1/Default/url/GET/ApiPermission.Test.Sprint5SaadStackSaadCRUDApiV1EC4B83F2.GET..url": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadCRUDApiV1urlGETApiPermissionTestSprint5SaadStackSaadCRUDApiV1EC4B83F2GETurlD66C85D7"
+          }
+        ],
+        "/Sprint5SaadStack/Saad-CRUD-Api-V1/Default/url/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadCRUDApiV1urlGET5EBE11C0"
+          }
+        ],
+        "/Sprint5SaadStack/Saad-CRUD-Api-V1/Default/url/PUT/ApiPermission.Sprint5SaadStackSaadCRUDApiV1EC4B83F2.PUT..url": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadCRUDApiV1urlPUTApiPermissionSprint5SaadStackSaadCRUDApiV1EC4B83F2PUTurl205DE14F"
+          }
+        ],
+        "/Sprint5SaadStack/Saad-CRUD-Api-V1/Default/url/PUT/ApiPermission.Test.Sprint5SaadStackSaadCRUDApiV1EC4B83F2.PUT..url": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadCRUDApiV1urlPUTApiPermissionTestSprint5SaadStackSaadCRUDApiV1EC4B83F2PUTurl64693179"
+          }
+        ],
+        "/Sprint5SaadStack/Saad-CRUD-Api-V1/Default/url/PUT/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadCRUDApiV1urlPUT08359D7B"
+          }
+        ],
+        "/Sprint5SaadStack/Saad-CRUD-Api-V1/Default/url/PATCH/ApiPermission.Sprint5SaadStackSaadCRUDApiV1EC4B83F2.PATCH..url": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadCRUDApiV1urlPATCHApiPermissionSprint5SaadStackSaadCRUDApiV1EC4B83F2PATCHurlC43C37E1"
+          }
+        ],
+        "/Sprint5SaadStack/Saad-CRUD-Api-V1/Default/url/PATCH/ApiPermission.Test.Sprint5SaadStackSaadCRUDApiV1EC4B83F2.PATCH..url": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadCRUDApiV1urlPATCHApiPermissionTestSprint5SaadStackSaadCRUDApiV1EC4B83F2PATCHurlEE6C6265"
+          }
+        ],
+        "/Sprint5SaadStack/Saad-CRUD-Api-V1/Default/url/PATCH/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadCRUDApiV1urlPATCH293760E0"
+          }
+        ],
+        "/Sprint5SaadStack/Saad-CRUD-Api-V1/Default/url/DELETE/ApiPermission.Sprint5SaadStackSaadCRUDApiV1EC4B83F2.DELETE..url": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadCRUDApiV1urlDELETEApiPermissionSprint5SaadStackSaadCRUDApiV1EC4B83F2DELETEurl8CD1AC5F"
+          }
+        ],
+        "/Sprint5SaadStack/Saad-CRUD-Api-V1/Default/url/DELETE/ApiPermission.Test.Sprint5SaadStackSaadCRUDApiV1EC4B83F2.DELETE..url": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadCRUDApiV1urlDELETEApiPermissionTestSprint5SaadStackSaadCRUDApiV1EC4B83F2DELETEurlF32FFFD4"
+          }
+        ],
+        "/Sprint5SaadStack/Saad-CRUD-Api-V1/Default/url/DELETE/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SaadCRUDApiV1urlDELETEFFDAA3D1"
+          }
+        ],
+        "/Sprint5SaadStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/Sprint5SaadStack/CDKMetadata/Condition": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadataAvailable"
+          }
+        ],
+        "/Sprint5SaadStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/Sprint5SaadStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "Sprint5SaadStack"
+    }
+  }
+}
