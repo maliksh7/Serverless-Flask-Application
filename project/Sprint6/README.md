@@ -1,5 +1,5 @@
 
-# Flask App with Docker, ECR and ECS
+# Serverless Flask Application with Docker, ECR and ECS
 
 ## SkipQ Cohort Voyager: Sprint 6
 
